@@ -11,6 +11,8 @@ if not path.exists(cache_path):
     os.makedirs(cache_path, exist_ok=True)
 
 with gr.Blocks() as demo:
+    infer = load_models()
+
     with gr.Column():
         with gr.Row():
             with gr.Column():
@@ -18,12 +20,12 @@ with gr.Blocks() as demo:
                 c = gr.Slider(label="cfg", minimum=0.1, maximum=3, step=0.1, value=1, interactive=True)
                 i_s = gr.Slider(label="sketch strength", minimum=0.1, maximum=0.9, step=0.1, value=0.9, interactive=True)
             with gr.Column():
+                mod = gr.Text(label="Model HuggingFace id (after changing this wait until the model downloads in the console)", value="Lykon/dreamshaper-7", interactive=True)
                 t = gr.Text(label="Prompt", value="Scary warewolf, 8K, realistic, colorful, long sharp teeth, splash art", interactive=True)
                 se = gr.Number(label="seed", value=1337, interactive=True)
         with gr.Row(equal_height=True):
             i = gr.Image(source="canvas", tool="color-sketch", shape=(canvas_size, canvas_size), width=canvas_size, height=canvas_size, type="pil")
             o = gr.Image(width=canvas_size, height=canvas_size)
-
 
             def process_image(p, im, steps, cfg, image_strength, seed):
                 if not im:
@@ -37,12 +39,17 @@ with gr.Blocks() as demo:
                     seed=int(seed)
                 )
 
-            controls = [t, i, s, c, i_s, se]
+            reactive_controls = [t, i, s, c, i_s, se]
 
-            for control in controls:
-                control.change(fn=process_image, inputs=[t, i, s, c, i_s, se], outputs=o)
+            for control in reactive_controls:
+                control.change(fn=process_image, inputs=reactive_controls, outputs=o)
+
+            def update_model(model_name):
+                global infer
+                infer = load_models(model_name)
+
+            mod.change(fn=update_model, inputs=mod)
 
 
 if __name__ == "__main__":
-    infer = load_models()
     demo.launch()

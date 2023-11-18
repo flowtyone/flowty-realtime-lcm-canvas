@@ -5,7 +5,7 @@
 This is a realtime sketch to image demo using LCM and the gradio library. 
 If you're not familiar with LCM, read about it here - [article on huggingface](https://huggingface.co/blog/lcm_lora).
 
-Thanks to LCM LoRA, you can also use different models by altering the model_id variable in main.py.
+Thanks to LCM LoRA, you can also use different models by altering the model id in the ui.
 The desired effect was for you to be able to draw on one side and see the changes at close to real-time on the other side.
 
 Needless to say, this will perform worse on some GPUs, and better on some GPUs. 4090s usually perform best in the realtime scenario. Share your results!

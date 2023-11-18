@@ -25,7 +25,7 @@ class timer:
         print(f"{self.method} took {str(round(end - self.start, 2))}s")
 
 
-def load_models():
+def load_models(model_id="Lykon/dreamshaper-7"):
     import torch
     from diffusers import AutoPipelineForImage2Image, LCMScheduler
     from diffusers.utils import load_image
@@ -33,7 +33,6 @@ def load_models():
     if not is_mac:
         torch.backends.cuda.matmul.allow_tf32 = True
 
-    model_id = "Lykon/dreamshaper-7"
     lcm_lora_id = "latent-consistency/lcm-lora-sdv1-5"
 
     pipe = AutoPipelineForImage2Image.from_pretrained(
