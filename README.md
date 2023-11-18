@@ -15,8 +15,8 @@ This was tested on a macbook pro with M2 Max, 30 GPU - 32GB combo, python 3.10. 
 ### Setup:
 * Setup a venv if you feel like: ```python -m venv env```
   * activate on MacOS: ```source ./env/bin/activate```
-  * activate on Windows: ```env\bin\activate```
-* Nvidia users should install pytorch using this command: ```pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121```
+  * activate on Windows: ```env\Scripts\activate```
+* Nvidia users should install pytorch using this command: ```pip install torch --extra-index-url https://download.pytorch.org/whl/cu121```
 * Install the requirements: ```pip install -r requirements.txt```
 * Run ui.py: ```python ui.py```
 
