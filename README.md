@@ -26,7 +26,7 @@ After that gradio will print to the console the url where you can access the ui.
 This is a community project from [flowt.ai](https://flowt.ai). If you like it, check us out!
 
 <picture>
- <source media="(prefers-color-scheme: dark)" srcset="logo.svg" height="50">
- <source media="(prefers-color-scheme: light)" srcset="logo-dark.svg" height="50">
+ <source media="(prefers-color-scheme: dark)" srcset="logo-dark.svg" height="50">
+ <source media="(prefers-color-scheme: light)" srcset="logo.svg" height="50">
  <img alt="flowt.ai logo" src="flowt.png" height="50">
 </picture>
