@@ -17,9 +17,7 @@ This was tested on a macbook pro with M2 Max, 30 GPU - 32GB combo, python 3.10. 
   * activate on MacOS: ```source ./env/bin/activate```
   * activate on Windows: ```env\bin\activate```
 * Install the requirements: ```pip install -r requirements.txt```
-* Run ui.py: 
-  * MacOS + mps: ```USE_LOCAL_CUDA=0 python ui.py```
-  * Windows + Nvidia GPU: ```python ui.py```
+* Run ui.py: ```python ui.py```
 
 After you run ui.py, models should be downloaded automatically to the models directory. It might take a few minutes depending on your network.
 After that gradio will print to the console the url where you can access the ui.

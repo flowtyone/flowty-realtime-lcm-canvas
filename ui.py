@@ -44,5 +44,5 @@ with gr.Blocks() as demo:
 
 
 if __name__ == "__main__":
-    infer = load_models(True)
+    infer = load_models()
     demo.launch()

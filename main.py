@@ -3,13 +3,14 @@ import random
 from os import path
 from contextlib import nullcontext
 import time
+from sys import platform
 
 cache_path = path.join(path.dirname(path.abspath(__file__)), "models")
 
 os.environ["TRANSFORMERS_CACHE"] = cache_path
 os.environ["HF_HUB_CACHE"] = cache_path
 os.environ["HF_HOME"] = cache_path
-use_cuda_local = os.environ.get("USE_LOCAL_CUDA", "1")
+is_mac = platform == "darwin"
 
 class timer:
     def __init__(self, method_name="timed process"):
@@ -24,12 +25,12 @@ class timer:
         print(f"{self.method} took {str(round(end - self.start, 2))}s")
 
 
-def load_models(is_local=False):
+def load_models():
     import torch
     from diffusers import AutoPipelineForImage2Image, LCMScheduler
     from diffusers.utils import load_image
 
-    if not is_local:
+    if not is_mac:
         torch.backends.cuda.matmul.allow_tf32 = True
 
     model_id = "Lykon/dreamshaper-7"
@@ -48,7 +49,7 @@ def load_models(is_local=False):
     pipe.load_lora_weights(lcm_lora_id)
     pipe.fuse_lora()
 
-    device = "cuda" if not is_local or use_cuda_local == "1" else "mps"
+    device = "mps" if is_mac else "cuda"
 
     pipe.to(device=device)
 
