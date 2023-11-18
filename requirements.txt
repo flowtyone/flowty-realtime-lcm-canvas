@@ -1,0 +1,7 @@
+diffusers
+flask
+torch
+transformers
+accelerate
+pillow
+gradio==3.41.2

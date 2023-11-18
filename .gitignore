@@ -1,0 +1,9 @@
+/models
+/env
+beam_main.py
+
+.beamignore
+.idea
+__pycache__/
+.DS_store
+.env
