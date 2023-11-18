@@ -4,6 +4,7 @@ from os import path
 from contextlib import nullcontext
 import time
 from sys import platform
+import torch
 
 cache_path = path.join(path.dirname(path.abspath(__file__)), "models")
 
@@ -11,6 +12,23 @@ os.environ["TRANSFORMERS_CACHE"] = cache_path
 os.environ["HF_HUB_CACHE"] = cache_path
 os.environ["HF_HOME"] = cache_path
 is_mac = platform == "darwin"
+
+def should_use_fp16():
+    if is_mac:
+        return True
+
+    gpu_props = torch.cuda.get_device_properties("cuda")
+
+    if gpu_props.major < 6:
+        return False
+
+    nvidia_16_series = ["1660", "1650", "1630"]
+
+    for x in nvidia_16_series:
+        if x in gpu_props.name:
+            return False
+
+    return True
 
 class timer:
     def __init__(self, method_name="timed process"):
@@ -26,22 +44,30 @@ class timer:
 
 
 def load_models(model_id="Lykon/dreamshaper-7"):
-    import torch
     from diffusers import AutoPipelineForImage2Image, LCMScheduler
     from diffusers.utils import load_image
 
     if not is_mac:
         torch.backends.cuda.matmul.allow_tf32 = True
 
+    use_fp16 = should_use_fp16()
+
     lcm_lora_id = "latent-consistency/lcm-lora-sdv1-5"
 
-    pipe = AutoPipelineForImage2Image.from_pretrained(
-        model_id,
-        cache_dir=cache_path,
-        torch_dtype=torch.float16,
-        variant="fp16",
-        safety_checker=None
-    )
+    if use_fp16:
+        pipe = AutoPipelineForImage2Image.from_pretrained(
+            model_id,
+            cache_dir=cache_path,
+            torch_dtype=torch.float16,
+            variant="fp16",
+            safety_checker=None
+        )
+    else:
+        pipe = AutoPipelineForImage2Image.from_pretrained(
+            model_id,
+            cache_dir=cache_path,
+            safety_checker=None
+        )
 
     pipe.scheduler = LCMScheduler.from_config(pipe.scheduler.config)
 
