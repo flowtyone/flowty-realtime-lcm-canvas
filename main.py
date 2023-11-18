@@ -9,7 +9,7 @@ cache_path = path.join(path.dirname(path.abspath(__file__)), "models")
 os.environ["TRANSFORMERS_CACHE"] = cache_path
 os.environ["HF_HUB_CACHE"] = cache_path
 os.environ["HF_HOME"] = cache_path
-use_cuda_local = os.environ.get("USE_LOCAL_CUDA", False)
+use_cuda_local = os.environ.get("USE_LOCAL_CUDA", "1")
 
 class timer:
     def __init__(self, method_name="timed process"):
@@ -48,7 +48,7 @@ def load_models(is_local=False):
     pipe.load_lora_weights(lcm_lora_id)
     pipe.fuse_lora()
 
-    device = "cuda" if not is_local or use_cuda_local else "mps"
+    device = "cuda" if not is_local or use_cuda_local == "1" else "mps"
 
     pipe.to(device=device)
 
