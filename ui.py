@@ -1,5 +1,5 @@
 import os
-
+import argparse
 import gradio as gr
 from main import load_models, cache_path
 from PIL import Image
@@ -52,4 +52,8 @@ with gr.Blocks() as demo:
 
 
 if __name__ == "__main__":
-    demo.launch()
+    parser = argparse.ArgumentParser()
+    # If the option python ui.py --share is attached, it will be deployed to Gradio
+    parser.add_argument("--share", action="store_true", help="Deploy on Gradio for sharing", default=False)
+    args = parser.parse_args()
+    demo.launch(share=args.share)
