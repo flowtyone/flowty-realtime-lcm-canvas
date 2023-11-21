@@ -23,6 +23,17 @@ This was tested on a macbook pro with M2 Max, 30 GPU - 32GB combo, python 3.10. 
 After you run ui.py, models should be downloaded automatically to the models directory. It might take a few minutes depending on your network.
 After that gradio will print to the console the url where you can access the ui.
 
+### Use Google Colab
+
+Google Colab users can also enjoy it by executing the following command and accessing the generated Gradio Public URL.  
+(I think this is currently only available in the Colab Pro.)
+
+```
+!git clone https://github.com/flowtyone/flowty-realtime-lcm-canvas.git
+%cd flowty-realtime-lcm-canvas
+!pip install -r requirements.txt
+!python ui.py --share
+```
 
 This is a community project from [flowt.ai](https://flowt.ai). If you like it, check us out!
 
