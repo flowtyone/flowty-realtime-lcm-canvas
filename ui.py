@@ -23,13 +23,14 @@ with gr.Blocks() as demo:
                 mod = gr.Text(label="Model HuggingFace id (after changing this wait until the model downloads in the console)", value="Lykon/dreamshaper-7", interactive=True)
                 t = gr.Text(label="Prompt", value="Scary warewolf, 8K, realistic, colorful, long sharp teeth, splash art", interactive=True)
                 se = gr.Number(label="seed", value=1337, interactive=True)
+        with gr.Row():
+            ra = gr.Radio(["canvas", "upload"], value="canvas")
         with gr.Row(equal_height=True):
             with gr.Column():
-                ra = gr.Radio(["upload", "canvas",])
-                with gr.Row():
-                    i1 = gr.Image(source="upload", type="pil")
                 with gr.Row():
                     i2 = gr.Image(source="canvas", tool="color-sketch", shape=(canvas_size, canvas_size), width=canvas_size, height=canvas_size, type="pil")
+                with gr.Row():
+                    i1 = gr.Image(source="upload", type="pil")
             o = gr.Image(width=canvas_size, height=canvas_size)
 
             def process_image(p, im1, im2, steps, cfg, image_strength, seed, ra):
