@@ -17,7 +17,7 @@ This was tested on a macbook pro with M2 Max, 30 GPU - 32GB combo, python 3.10. 
 
 ### Setup
 ---
-* Setup a venv if you'd like isolate your project environment: ```python -m venv env```
+* Setup a venv if you'd like to isolate your project environment: ```python -m venv env```
   * activate on MacOS: ```source ./env/bin/activate```
   * activate on Windows: ```env\Scripts\activate```
 * Nvidia users should install PyTorch using this command: ```pip install torch --extra-index-url https://download.pytorch.org/whl/cu121```
