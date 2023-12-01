@@ -42,7 +42,7 @@ with gr.Blocks() as demo:
                     return Image.new("RGB", (canvas_size, canvas_size))
                 return infer(
                     prompt=p,
-                    image=im1 if ra == "upload" else im2,
+                    image=im1.resize((canvas_size, canvas_size), Image.LANCZOS) if ra == "upload" else im2,
                     num_inference_steps=steps,
                     guidance_scale=cfg,
                     strength=image_strength,
