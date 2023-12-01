@@ -23,23 +23,33 @@ with gr.Blocks() as demo:
                 mod = gr.Text(label="Model Hugging Face id (after changing this wait until the model downloads in the console)", value="Lykon/dreamshaper-7", interactive=True)
                 t = gr.Text(label="Prompt", value="Scary warewolf, 8K, realistic, colorful, long sharp teeth, splash art", interactive=True)
                 se = gr.Number(label="seed", value=1337, interactive=True)
+        with gr.Row():
+            ra = gr.Radio(["canvas", "upload"], value="canvas")
         with gr.Row(equal_height=True):
-            i = gr.Image(source="canvas", tool="color-sketch", shape=(canvas_size, canvas_size), width=canvas_size, height=canvas_size, type="pil")
+            with gr.Column():
+                with gr.Row():
+                    i2 = gr.Image(source="canvas", tool="color-sketch", shape=(canvas_size, canvas_size), width=canvas_size, height=canvas_size, type="pil")
+                with gr.Row():
+                    i1 = gr.Image(source="upload", type="pil")
             o = gr.Image(width=canvas_size, height=canvas_size)
 
-            def process_image(p, im, steps, cfg, image_strength, seed):
-                if not im:
+            def process_image(p, im1, im2, steps, cfg, image_strength, seed, ra):
+                if (
+                    not ra
+                    or (ra == "upload" and not im1)
+                    or (ra == "canvas" and not im2)
+                ):
                     return Image.new("RGB", (canvas_size, canvas_size))
                 return infer(
                     prompt=p,
-                    image=im,
+                    image=im1.resize((canvas_size, canvas_size), Image.LANCZOS) if ra == "upload" else im2,
                     num_inference_steps=steps,
                     guidance_scale=cfg,
                     strength=image_strength,
                     seed=int(seed)
                 )
 
-            reactive_controls = [t, i, s, c, i_s, se]
+            reactive_controls = [t, i1, i2, s, c, i_s, se, ra]
 
             for control in reactive_controls:
                 control.change(fn=process_image, inputs=reactive_controls, outputs=o)
