@@ -20,26 +20,39 @@ with gr.Blocks() as demo:
                 c = gr.Slider(label="cfg", minimum=0.1, maximum=3, step=0.1, value=1, interactive=True)
                 i_s = gr.Slider(label="sketch strength", minimum=0.1, maximum=0.9, step=0.1, value=0.9, interactive=True)
             with gr.Column():
-                mod = gr.Text(label="Model Hugging Face id (after changing this wait until the model downloads in the console)", value="Lykon/dreamshaper-7", interactive=True)
+                mod = gr.Text(label="Model HuggingFace id (after changing this wait until the model downloads in the console)", value="Lykon/dreamshaper-7", interactive=True)
                 t = gr.Text(label="Prompt", value="Scary warewolf, 8K, realistic, colorful, long sharp teeth, splash art", interactive=True)
                 se = gr.Number(label="seed", value=1337, interactive=True)
         with gr.Row(equal_height=True):
-            i = gr.Image(source="canvas", tool="color-sketch", shape=(canvas_size, canvas_size), width=canvas_size, height=canvas_size, type="pil")
+            with gr.Tab("Canvas") as canvasTab:
+                    i2 = gr.Image(source="canvas", tool="color-sketch", shape=(canvas_size, canvas_size), width=canvas_size, height=canvas_size, type="pil")
+                    #pass
+            with gr.Tab("Upload") as uploadTab:
+                    i1 = gr.Image(source="upload", type="pil")
+                    #pass
             o = gr.Image(width=canvas_size, height=canvas_size)
 
-            def process_image(p, im, steps, cfg, image_strength, seed):
-                if not im:
+            ra = gr.Radio(["canvas", "upload"], value="canvas", visible=False)
+            canvasTab.select(lambda :"canvas", None, ra)
+            uploadTab.select(lambda :"upload", None, ra)
+
+            def process_image(p, im1, im2, steps, cfg, image_strength, seed, ra):
+                if (
+                    not ra
+                    or (ra == "upload" and not im1)
+                    or (ra == "canvas" and not im2)
+                ):
                     return Image.new("RGB", (canvas_size, canvas_size))
                 return infer(
                     prompt=p,
-                    image=im,
+                    image=im1.resize((canvas_size, canvas_size), Image.LANCZOS) if ra == "upload" else im2,
                     num_inference_steps=steps,
                     guidance_scale=cfg,
                     strength=image_strength,
                     seed=int(seed)
                 )
 
-            reactive_controls = [t, i, s, c, i_s, se]
+            reactive_controls = [t, i1, i2, s, c, i_s, se, ra]
 
             for control in reactive_controls:
                 control.change(fn=process_image, inputs=reactive_controls, outputs=o)
